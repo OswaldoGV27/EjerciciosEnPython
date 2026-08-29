@@ -1,0 +1,6 @@
+Para escuchar mensajes en un puerto especifico y un protocolo de transferencia:
+Caso TCP:
+sudo tcpdump -i any tcp port 5005
+
+Caso UDP:
+sudo tcpdump -i any udp port 5005

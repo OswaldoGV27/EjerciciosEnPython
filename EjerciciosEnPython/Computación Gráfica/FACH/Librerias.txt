@@ -1,0 +1,3 @@
+Usaremos la librería Matplotlib. Esta librería nos permite crear una ventana interactiva donde puedes hacer clics para poner puntos y tiene botones nativos:
+
+pip install matplotlib

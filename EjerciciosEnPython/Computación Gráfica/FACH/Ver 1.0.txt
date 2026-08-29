@@ -1,0 +1,124 @@
+import matplotlib.pyplot as plt
+from matplotlib.widgets import Button
+
+# ==========================================
+# 1. ESTRUCTURAS DE DATOS GLOBALES
+# ==========================================
+puntos = []
+envolvente = []
+
+# ==========================================
+# 2. NÚCLEO MATEMÁTICO: GRAHAM SCAN (Monotone Chain)
+# ==========================================
+def producto_cruz(p1, p2, p3):
+    # Retorna positivo si es giro a la izquierda (convexo)
+    return (p2[0] - p1[0]) * (p3[1] - p1[1]) - (p2[1] - p1[1]) * (p3[0] - p1[0])
+
+def calcular_envolvente(lista_puntos):
+    # 1. Eliminar duplicados exactos y ordenar de izquierda a derecha (por X y luego Y)
+    puntos_unicos = list(set(lista_puntos))
+    if len(puntos_unicos) < 3:
+        return []
+    
+    ordenados = sorted(puntos_unicos)
+    
+    # 2. Construir la mitad inferior
+    lower = []
+    for p in ordenados:
+        while len(lower) >= 2 and producto_cruz(lower[-2], lower[-1], p) <= 0:
+            lower.pop()
+        lower.append(p)
+        
+    # 3. Construir la mitad superior
+    upper = []
+    for p in reversed(ordenados):
+        while len(upper) >= 2 and producto_cruz(upper[-2], upper[-1], p) <= 0:
+            upper.pop()
+        upper.append(p)
+        
+    # Retornamos la unión de ambas mitades (quitando el último punto que se repite)
+    return lower[:-1] + upper[:-1]
+
+# ==========================================
+# 3. CONTROLADORES DE INTERFAZ GRÁFICA
+# ==========================================
+def al_hacer_clic(event):
+    # Ignorar los clics si el usuario presiona fuera de la cuadrícula o sobre los botones
+    if event.inaxes != ax:
+        return
+    
+    # Agregar la coordenada exacta del clic
+    puntos.append((event.xdata, event.ydata))
+    actualizar_grafica()
+
+
+def procesar(event):
+    global envolvente
+    envolvente = calcular_envolvente(puntos)
+    actualizar_grafica()
+
+def limpiar(event):
+    global puntos, envolvente
+    puntos.clear()
+    envolvente.clear()
+    actualizar_grafica()
+
+# ==========================================
+# 4. RENDERIZADO (PIPELINE GRÁFICO)
+# ==========================================
+def actualizar_grafica():
+    ax.clear()
+    ax.set_title("Sistema de Nesting - Optimización de Corte de Materiales", fontsize=14, fontweight='bold')
+    
+    # Configurar el plano de trabajo (la lámina)
+    ax.set_xlim(0, 100)
+    ax.set_ylim(0, 100)
+    ax.grid(True, linestyle='--', alpha=0.6) # Cuadrícula de ingeniería
+    ax.set_xlabel("Eje X (mm)")
+    ax.set_ylabel("Eje Y (mm)")
+    
+    # 1. Dibujar los vértices ingresados por el usuario
+    if puntos:
+        xs, ys = zip(*puntos)
+        ax.plot(xs, ys, 'ko', markersize=5, label='Vértices Irregulares')
+        
+    # 2. Dibujar el polígono optimizado si ya se calculó
+    if envolvente:
+        # Repetimos el primer punto al final para que la línea "cierre" el polígono
+        env_cerrada = envolvente + [envolvente[0]]
+        exs, eys = zip(*env_cerrada)
+        
+        # Trazar línea de corte (borde verde)
+        ax.plot(exs, eys, 'g-', linewidth=2, label='Línea de Corte (Convex Hull)')
+        # Sombrear el área útil del material
+        ax.fill(exs, eys, 'green', alpha=0.2, label='Área Útil')
+        # Marcar los vértices críticos en rojo
+        ax.plot(exs, eys, 'ro', markersize=6)
+        
+        ax.legend(loc='upper left')
+
+    fig.canvas.draw()
+
+# ==========================================
+# INICIALIZACIÓN DE LA VENTANA
+# ==========================================
+# Crear la ventana y los ejes
+fig, ax = plt.subplots(figsize=(9, 7))
+plt.subplots_adjust(bottom=0.2) # Dejar espacio abajo para los botones
+
+# Crear botón de "Procesar"
+ax_procesar = plt.axes([0.3, 0.05, 0.2, 0.075])
+btn_procesar = Button(ax_procesar, 'Procesar Geometría')
+btn_procesar.on_clicked(procesar)
+
+# Crear botón de "Limpiar"
+ax_limpiar = plt.axes([0.55, 0.05, 0.2, 0.075])
+btn_limpiar = Button(ax_limpiar, 'Limpiar Lámina')
+btn_limpiar.on_clicked(limpiar)
+
+# Conectar el evento del ratón al lienzo
+fig.canvas.mpl_connect('button_press_event', al_hacer_clic)
+
+# Dibujar por primera vez y mostrar la ventana
+actualizar_grafica()
+plt.show()

@@ -1,0 +1,10 @@
+Para simular pérdida del 30% en el adaptador de red de Linux ejecutar: 
+sudo tc qdisc add dev enp0s3 root netem loss 30% 
+Verificar configuración: 
+tc qdisc show dev enp0s3
+Eliminar simulación al finalizar: 
+sudo tc qdisc del dev enp0s3 root 
+
+
+sudo tc qdisc add dev enp0s3 root netem loss 60% 
+sudo tc qdisc add dev enp0s3 root netem delay 200ms loss 80%

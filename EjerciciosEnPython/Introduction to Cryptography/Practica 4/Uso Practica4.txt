@@ -1,0 +1,27 @@
+Instalar pycryptodome:
+pip install pycryptodome
+o
+pip3 install pycryptodome
+
+Verificar Instalación:
+python -c "import Crypto; print(Crypto.__file__)"
+
+Si muestra una ruta, significa que Crypto está instalado correctamente.
+
+Generar clave para DES:
+python Practica4.py -g
+
+Cifrar:
+python Practica4.py -c ramwt3MW6nQ= archivo_entrada.txt archivo_salida.txt
+
+Decifrar:
+python Practica4.py -d ramwt3MW6nQ== archivo_salida.txt Decifrado.txt
+
+Generar Sub-claves k1, k2 para S-DES:
+python Practica4.py -k 1010000010
+
+Codificar Cadena Binaria a Base64:
+python Practica4.py -bb64 010011010110000101101110
+
+Codificar Base64 a Binaria:
+python Practica4.py -b64b TWFu 24

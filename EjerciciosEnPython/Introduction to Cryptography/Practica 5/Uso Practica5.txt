@@ -1,0 +1,18 @@
+Instalar pycryptodome:
+pip install pycryptodome
+o
+pip3 install pycryptodome
+
+Verificar Instalación:
+python -c "import Crypto; print(Crypto.__file__)"
+
+Si muestra una ruta, significa que Crypto está instalado correctamente.
+
+Generar Clave 3DES:
+python Practica5.py -g Clave.txt
+
+Cifrar en 3DES:
+python Practica5.py -c Clave.txt Entrada.txt Salida.txt
+
+Decifrar 3DES:
+python Practica5.py -d Clave.txt Salida.txt Decifrado.txt

@@ -1,0 +1,15 @@
+El cifrado DES (Data Encryption Standard) es un algoritmo que convierte un texto en un texto cifrado. Fue desarrollado por el gobierno de los Estados Unidos en los años 70. 
+Características
+Es un algoritmo de cifrado simétrico. 
+Utiliza bloques de 64 bits y una clave de 64 bits. 
+Cifra grupos de 64 bits de mensaje, lo que equivale a 16 números hexadecimales. 
+El tamaño efectivo de la clave es de 56 bits, ya que cada octavo bit de clave se ignora. 
+Usos 
+Se diseñó para proteger la información confidencial del gobierno y de los militares.
+Posteriormente fue adoptado por muchos otros sectores.
+Se utiliza para cifrar y descifrar datos.
+Variaciones
+DES triple (DES3), que es una variación en la que se utilizan claves de 64 bits para una clave de 192 bits. 
+DES-EEE3, que son tres encriptaciones DES con tres claves distintas. 
+DES-EDE3, que son tres operaciones DES con la secuencia encriptar-desencriptar-encriptar con tres claves diferentes. 
+El algoritmo DES está siendo paulatinamente sustituido por el AES, ya que este es hasta seis veces más rápido. 
